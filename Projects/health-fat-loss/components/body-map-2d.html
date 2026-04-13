@@ -1,0 +1,55 @@
+<!--
+  body-map-2d.html — 11-region muscle map SVG, extracted verbatim from
+  Projects/health-fat-loss/nippard-training-hub.html:1050-1093.
+
+  Differences from source:
+  - fill="var(--NAME)" dark-theme colors replaced with fill="currentColor"; the
+    dashboard applies .heat-N classes (see §5) to drive color.
+  - inline onclick removed; dashboard attaches listeners after inlining.
+  - stroke colors reference the Airtable-aligned --theme_border.
+
+  All 11 muscle regions preserved with their data-muscle attribute.
+  Dashboard inlines this SVG fragment into the Body view.
+-->
+<svg class="body-svg" viewBox="0 0 300 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Body muscle map">
+  <g fill="none" stroke="var(--theme_border)" stroke-width="1">
+    <ellipse cx="150" cy="42" rx="28" ry="34"/>
+    <rect x="140" y="72" width="20" height="18" rx="4"/>
+  </g>
+
+  <path class="muscle-region heat-0" data-muscle="traps" d="M115,90 Q150,80 185,90 L180,108 Q150,100 120,108 Z"/>
+
+  <ellipse class="muscle-region heat-0" data-muscle="shoulders" cx="98" cy="112" rx="22" ry="16"/>
+  <ellipse class="muscle-region heat-0" data-muscle="shoulders" cx="202" cy="112" rx="22" ry="16"/>
+
+  <path class="muscle-region heat-0" data-muscle="chest" d="M112,108 Q150,100 188,108 L185,148 Q150,155 115,148 Z"/>
+
+  <ellipse class="muscle-region heat-0" data-muscle="biceps" cx="82" cy="158" rx="14" ry="32"/>
+  <ellipse class="muscle-region heat-0" data-muscle="biceps" cx="218" cy="158" rx="14" ry="32"/>
+
+  <ellipse class="muscle-region heat-0" data-muscle="triceps" cx="78" cy="162" rx="10" ry="28" transform="translate(-8,0)"/>
+  <ellipse class="muscle-region heat-0" data-muscle="triceps" cx="222" cy="162" rx="10" ry="28" transform="translate(8,0)"/>
+
+  <rect class="muscle-region heat-0" data-muscle="abs" x="128" y="150" width="44" height="68" rx="8"/>
+
+  <rect class="muscle-region heat-0" data-muscle="back" x="112" y="112" width="14" height="50" rx="4" opacity="0.75"/>
+  <rect class="muscle-region heat-0" data-muscle="back" x="174" y="112" width="14" height="50" rx="4" opacity="0.75"/>
+
+  <path class="muscle-region heat-0" data-muscle="glutes" d="M118,220 Q150,212 182,220 L180,250 Q150,258 120,250 Z"/>
+
+  <path class="muscle-region heat-0" data-muscle="quads" d="M115,252 L128,252 L130,360 L110,360 Z"/>
+  <path class="muscle-region heat-0" data-muscle="quads" d="M172,252 L185,252 L190,360 L170,360 Z"/>
+
+  <path class="muscle-region heat-0" data-muscle="hamstrings" d="M130,252 L145,252 L143,355 L132,355 Z"/>
+  <path class="muscle-region heat-0" data-muscle="hamstrings" d="M155,252 L170,252 L168,355 L157,355 Z"/>
+
+  <ellipse class="muscle-region heat-0" data-muscle="calves" cx="120" cy="408" rx="12" ry="40"/>
+  <ellipse class="muscle-region heat-0" data-muscle="calves" cx="180" cy="408" rx="12" ry="40"/>
+
+  <g fill="var(--theme_surface)">
+    <rect x="60" y="195" width="12" height="50" rx="6"/>
+    <rect x="228" y="195" width="12" height="50" rx="6"/>
+    <ellipse cx="120" cy="470" rx="16" ry="8"/>
+    <ellipse cx="180" cy="470" rx="16" ry="8"/>
+  </g>
+</svg>
