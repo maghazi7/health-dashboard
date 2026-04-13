@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTS Training Hub — Jeff Nippard Beginner</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #111114;
+  --surface-2: #18181c;
+  --surface-3: #222228;
+  --border: #2a2a32;
+  --border-light: #3a3a44;
+  --text: #e8e6e3;
+  --text-dim: #8a8a96;
+  --text-muted: #5a5a66;
+  --accent: #ff6b35;
+  --accent-glow: rgba(255, 107, 53, 0.15);
+  --accent-2: #00d4aa;
+  --accent-3: #7c6bff;
+  --strength: #ff6b35;
+  --hypertrophy: #00d4aa;
+  --chest: #ff6b6b;
+  --back: #4ecdc4;
+  --shoulders: #ffd93d;
+  --biceps: #6bcbff;
+  --triceps: #c084fc;
+  --quads: #ff8a65;
+  --hamstrings: #81c784;
+  --glutes: #f48fb1;
+  --calves: #90a4ae;
+  --abs: #ffb74d;
+  --traps: #a1887f;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font: 'Instrument Sans', -apple-system, sans-serif;
+  --mono: 'Space Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== HEADER ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), #ff9a5c);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.nav { display: flex; gap: 4px; }
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { color: var(--text); background: var(--surface-2); }
+.nav-btn.active { color: var(--accent); background: var(--accent-glow); }
+
+/* ===== MAIN LAYOUT ===== */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+/* ===== DASHBOARD VIEW ===== */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.dash-grid .full-width { grid-column: 1 / -1; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: border-color 0.3s;
+}
+
+.card:hover { border-color: var(--border-light); }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+
+.card-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+/* Week selector */
+.week-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.week-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.week-btn:hover { border-color: var(--accent); color: var(--text); }
+.week-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+.week-btn.foundation { border-left: 3px solid var(--strength); }
+.week-btn.ramping { border-left: 3px solid var(--hypertrophy); }
+
+/* Stat boxes */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+/* Nutrition card */
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.macro-card {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.macro-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.macro-card.protein::before { background: var(--accent); }
+.macro-card.carbs::before { background: var(--accent-2); }
+.macro-card.fat::before { background: var(--accent-3); }
+
+.macro-value {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.macro-card.protein .macro-value { color: var(--accent); }
+.macro-card.carbs .macro-value { color: var(--accent-2); }
+.macro-card.fat .macro-value { color: var(--accent-3); }
+
+.macro-unit { font-size: 12px; color: var(--text-dim); }
+.macro-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+.cal-display {
+  text-align: center;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+
+.cal-value {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cal-label { font-size: 12px; color: var(--text-dim); }
+
+.day-type-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.day-type-badge.training { background: rgba(255, 107, 53, 0.15); color: var(--accent); }
+.day-type-badge.rest { background: rgba(138, 138, 150, 0.15); color: var(--text-dim); }
+
+/* ===== WORKOUT VIEW ===== */
+.workout-day {
+  margin-bottom: 32px;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 18px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.day-num.strength { background: linear-gradient(135deg, var(--strength), #ff9a5c); }
+.day-num.hypertrophy { background: linear-gradient(135deg, var(--hypertrophy), #5cffc4); }
+
+.day-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.day-focus { font-size: 13px; color: var(--text-dim); font-family: var(--mono); }
+
+.rest-day-card {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.rest-day-card .icon { font-size: 32px; margin-bottom: 8px; }
+
+.exercise-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.exercise-table th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  position: sticky;
+  top: 64px;
+  background: var(--bg);
+  z-index: 10;
+}
+
+.exercise-row {
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.exercise-row:hover {
+  background: var(--surface-2);
+  transform: translateX(4px);
+}
+
+.exercise-row td {
+  padding: 14px 12px;
+  vertical-align: middle;
+}
+
+.exercise-row td:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.exercise-row td:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+.ex-name {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.muscle-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ex-detail {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.ex-rpe {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.video-link:hover { background: rgba(255, 0, 0, 0.2); }
+.video-link svg { width: 12px; height: 12px; }
+
+/* Exercise detail modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  place-items: center;
+}
+
+.modal-overlay.active { display: grid; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.modal-close:hover { color: var(--text); border-color: var(--border-light); }
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  padding-right: 40px;
+}
+
+.modal-muscles {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0 20px;
+}
+
+.muscle-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-section {
+  margin-bottom: 20px;
+}
+
+.modal-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.modal-note {
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+  padding: 14px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.modal-subs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.sub-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 20px;
+}
+
+.modal-video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ff0000;
+  color: white;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.modal-video-btn:hover { background: #cc0000; transform: translateY(-1px); }
+
+.modal-sets-detail {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface-2);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== EXERCISE DATABASE VIEW ===== */
+.db-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-box:focus { border-color: var(--accent); }
+.search-box::placeholder { color: var(--text-muted); }
+
+.filter-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover { border-color: var(--border-light); color: var(--text); }
+.filter-btn.active { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
+
+.db-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.db-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.db-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.db-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.db-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
+  padding-right: 8px;
+}
+
+.db-card-muscles {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.db-card-meta {
+  display: flex;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.db-card-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* ===== BODY MAP VIEW ===== */
+.body-map-container {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.body-svg-wrap {
+  position: sticky;
+  top: 88px;
+  height: fit-content;
+}
+
+.body-svg {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  display: block;
+}
+
+.body-svg .muscle-region {
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.5;
+}
+
+.body-svg .muscle-region:hover { opacity: 0.8; }
+.body-svg .muscle-region.active { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+
+.muscle-exercise-list {
+  min-height: 400px;
+}
+
+.muscle-section {
+  margin-bottom: 28px;
+}
+
+.muscle-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.muscle-color-bar {
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+}
+
+.muscle-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.muscle-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ===== NUTRITION VIEW ===== */
+.nutrition-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.nutrition-split .full { grid-column: 1 / -1; }
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.sched-day {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.sched-day.training { border-top: 3px solid var(--accent); }
+.sched-day.rest { border-top: 3px solid var(--text-muted); }
+
+.sched-day-name {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.sched-day-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.sched-day-cal {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.sched-day.training .sched-day-cal { color: var(--accent); }
+.sched-day.rest .sched-day-cal { color: var(--text-dim); }
+
+.supps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.supp-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-2);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+}
+
+.supp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.supp-name { font-weight: 600; font-size: 14px; flex: 1; }
+.supp-dose { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+.supp-time { font-size: 11px; color: var(--text-muted); }
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.section-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .dash-grid { grid-template-columns: 1fr; }
+  .nutrition-split { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .body-map-container { grid-template-columns: 1fr; }
+  .schedule-grid { grid-template-columns: repeat(4, 1fr); }
+  .db-grid { grid-template-columns: 1fr; }
+  .nav { display: none; }
+}
+
+/* ===== MOBILE NAV ===== */
+@media (max-width: 900px) {
+  .mobile-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 12, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 8px;
+    gap: 4px;
+    z-index: 100;
+    justify-content: center;
+  }
+  .main { padding-bottom: 80px; }
+}
+
+.mobile-nav { display: none; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeUp 0.4s ease-out both;
+}
+
+.animate-in:nth-child(1) { animation-delay: 0.05s; }
+.animate-in:nth-child(2) { animation-delay: 0.1s; }
+.animate-in:nth-child(3) { animation-delay: 0.15s; }
+.animate-in:nth-child(4) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">BT</div>
+      <div>
+        <div class="logo-text">Training Hub</div>
+        <div class="logo-sub">Jeff Nippard BTS • Beginner</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="showView('dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="showView('workout')">Workouts</button>
+      <button class="nav-btn" onclick="showView('database')">Exercise DB</button>
+      <button class="nav-btn" onclick="showView('bodymap')">Body Map</button>
+      <button class="nav-btn" onclick="showView('nutrition')">Nutrition</button>
+    </nav>
+  </div>
+</header>
+
+<nav class="mobile-nav">
+  <button class="nav-btn active" onclick="showView('dashboard')">Dash</button>
+  <button class="nav-btn" onclick="showView('workout')">Train</button>
+  <button class="nav-btn" onclick="showView('database')">DB</button>
+  <button class="nav-btn" onclick="showView('bodymap')">Body</button>
+  <button class="nav-btn" onclick="showView('nutrition')">Fuel</button>
+</nav>
+
+<main class="main">
+
+<!-- ===== DASHBOARD ===== -->
+<div id="view-dashboard" class="view active">
+  <h1 class="section-title">Dashboard</h1>
+  <p class="section-sub">12-week Bodybuilding Transformation System — Foundation → Ramping</p>
+
+  <div class="stat-row">
+    <div class="stat-box animate-in">
+      <div class="stat-value">12</div>
+      <div class="stat-label">Weeks</div>
+    </div>
+    <div class="stat-box animate-in">
+      <div class="stat-value">5</div>
+      <div class="stat-label">Days / Week</div>
+    </div>
+    <div class="stat-box animate-in">
+      <div class="stat-value">48</div>
+      <div class="stat-label">Exercises</div>
+    </div>
+    <div class="stat-box animate-in">
+      <div class="stat-value" style="color: var(--accent-2);">1,900</div>
+      <div class="stat-label">Daily Calories</div>
+    </div>
+  </div>
+
+  <div class="week-selector" id="weekSelector"></div>
+
+  <div class="dash-grid">
+    <div class="card full-width">
+      <div class="card-header">
+        <span class="card-title">Week <span id="selectedWeekNum">1</span> — Training Split</span>
+        <span class="card-badge" id="blockBadge">Foundation Block</span>
+      </div>
+      <div id="weekOverview"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Daily Macros (Training Day)</span>
+      </div>
+      <div class="cal-display">
+        <div class="cal-value">1,900</div>
+        <div class="cal-label">kcal target</div>
+        <div class="day-type-badge training">TRAINING DAY</div>
+      </div>
+      <div class="nutrition-grid">
+        <div class="macro-card protein">
+          <div class="macro-value">160<span class="macro-unit">g</span></div>
+          <div class="macro-label">Protein</div>
+        </div>
+        <div class="macro-card carbs">
+          <div class="macro-value">190<span class="macro-unit">g</span></div>
+          <div class="macro-label">Carbs</div>
+        </div>
+        <div class="macro-card fat">
+          <div class="macro-value">55<span class="macro-unit">g</span></div>
+          <div class="macro-label">Fat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Program Principles</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">⚡</span>
+          <div><div style="font-weight:600;font-size:13px;">Tension</div><div style="font-size:11px;color:var(--text-dim);">Mechanical tension = #1 growth driver</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">🎯</span>
+          <div><div style="font-weight:600;font-size:13px;">Technique</div><div style="font-size:11px;color:var(--text-dim);">Long muscle length bias • stretch-focused</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">🔥</span>
+          <div><div style="font-weight:600;font-size:13px;">Effort (RPE)</div><div style="font-size:11px;color:var(--text-dim);">Autoregulated intensity • no fixed %</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">📈</span>
+          <div><div style="font-weight:600;font-size:13px;">Progressive Overload</div><div style="font-size:11px;color:var(--text-dim);">Weight, reps, or sets — always advancing</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">🏋️</span>
+          <div><div style="font-weight:600;font-size:13px;">High-Tension Exercises</div><div style="font-size:11px;color:var(--text-dim);">Machines & cables for superior isolation</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+          <span style="font-size:18px;">💥</span>
+          <div><div style="font-weight:600;font-size:13px;">Intensity Techniques</div><div style="font-size:11px;color:var(--text-dim);">Drop sets, lengthened partials (Weeks 6-12)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WORKOUT VIEW ===== -->
+<div id="view-workout" class="view">
+  <h1 class="section-title">Weekly Workouts</h1>
+  <p class="section-sub">Select a week to view the full training program</p>
+  <div class="week-selector" id="workoutWeekSelector"></div>
+  <div id="workoutContent"></div>
+</div>
+
+<!-- ===== DATABASE VIEW ===== -->
+<div id="view-database" class="view">
+  <h1 class="section-title">Exercise Database</h1>
+  <p class="section-sub">48 exercises — tap any card for full details, coaching notes & video</p>
+  <div class="db-controls">
+    <input type="text" class="search-box" placeholder="Search exercises..." oninput="filterExercises()" id="exerciseSearch">
+    <div class="filter-group" id="muscleFilters"></div>
+  </div>
+  <div class="db-grid" id="exerciseGrid"></div>
+</div>
+
+<!-- ===== BODY MAP VIEW ===== -->
+<div id="view-bodymap" class="view">
+  <h1 class="section-title">Muscle Map</h1>
+  <p class="section-sub">Click a muscle group to see all exercises that target it</p>
+  <div class="body-map-container">
+    <div class="body-svg-wrap">
+      <svg class="body-svg" viewBox="0 0 300 520" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified body outline -->
+        <g fill="none" stroke="var(--border-light)" stroke-width="1">
+          <!-- Head -->
+          <ellipse cx="150" cy="42" rx="28" ry="34"/>
+          <!-- Neck -->
+          <rect x="140" y="72" width="20" height="18" rx="4"/>
+        </g>
+        <!-- Traps -->
+        <path class="muscle-region" data-muscle="traps" d="M115,90 Q150,80 185,90 L180,108 Q150,100 120,108 Z" fill="var(--traps)" onclick="selectMuscle('traps')"/>
+        <!-- Shoulders -->
+        <ellipse class="muscle-region" data-muscle="shoulders" cx="98" cy="112" rx="22" ry="16" fill="var(--shoulders)" onclick="selectMuscle('shoulders')"/>
+        <ellipse class="muscle-region" data-muscle="shoulders" cx="202" cy="112" rx="22" ry="16" fill="var(--shoulders)" onclick="selectMuscle('shoulders')"/>
+        <!-- Chest -->
+        <path class="muscle-region" data-muscle="chest" d="M112,108 Q150,100 188,108 L185,148 Q150,155 115,148 Z" fill="var(--chest)" onclick="selectMuscle('chest')"/>
+        <!-- Biceps -->
+        <ellipse class="muscle-region" data-muscle="biceps" cx="82" cy="158" rx="14" ry="32" fill="var(--biceps)" onclick="selectMuscle('biceps')"/>
+        <ellipse class="muscle-region" data-muscle="biceps" cx="218" cy="158" rx="14" ry="32" fill="var(--biceps)" onclick="selectMuscle('biceps')"/>
+        <!-- Triceps -->
+        <ellipse class="muscle-region" data-muscle="triceps" cx="78" cy="162" rx="10" ry="28" fill="var(--triceps)" transform="translate(-8,0)" onclick="selectMuscle('triceps')"/>
+        <ellipse class="muscle-region" data-muscle="triceps" cx="222" cy="162" rx="10" ry="28" fill="var(--triceps)" transform="translate(8,0)" onclick="selectMuscle('triceps')"/>
+        <!-- Abs -->
+        <rect class="muscle-region" data-muscle="abs" x="128" y="150" width="44" height="68" rx="8" fill="var(--abs)" onclick="selectMuscle('abs')"/>
+        <!-- Back (shown as side panels) -->
+        <rect class="muscle-region" data-muscle="back" x="112" y="112" width="14" height="50" rx="4" fill="var(--back)" opacity="0.6" onclick="selectMuscle('back')"/>
+        <rect class="muscle-region" data-muscle="back" x="174" y="112" width="14" height="50" rx="4" fill="var(--back)" opacity="0.6" onclick="selectMuscle('back')"/>
+        <!-- Glutes -->
+        <path class="muscle-region" data-muscle="glutes" d="M118,220 Q150,212 182,220 L180,250 Q150,258 120,250 Z" fill="var(--glutes)" onclick="selectMuscle('glutes')"/>
+        <!-- Quads -->
+        <path class="muscle-region" data-muscle="quads" d="M115,252 L128,252 L130,360 L110,360 Z" fill="var(--quads)" onclick="selectMuscle('quads')"/>
+        <path class="muscle-region" data-muscle="quads" d="M172,252 L185,252 L190,360 L170,360 Z" fill="var(--quads)" onclick="selectMuscle('quads')"/>
+        <!-- Hamstrings -->
+        <path class="muscle-region" data-muscle="hamstrings" d="M130,252 L145,252 L143,355 L132,355 Z" fill="var(--hamstrings)" onclick="selectMuscle('hamstrings')"/>
+        <path class="muscle-region" data-muscle="hamstrings" d="M155,252 L170,252 L168,355 L157,355 Z" fill="var(--hamstrings)" onclick="selectMuscle('hamstrings')"/>
+        <!-- Calves -->
+        <ellipse class="muscle-region" data-muscle="calves" cx="120" cy="408" rx="12" ry="40" fill="var(--calves)" onclick="selectMuscle('calves')"/>
+        <ellipse class="muscle-region" data-muscle="calves" cx="180" cy="408" rx="12" ry="40" fill="var(--calves)" onclick="selectMuscle('calves')"/>
+        <!-- Forearms (decorative) -->
+        <rect x="60" y="195" width="12" height="50" rx="6" fill="var(--surface-3)"/>
+        <rect x="228" y="195" width="12" height="50" rx="6" fill="var(--surface-3)"/>
+        <!-- Feet -->
+        <ellipse cx="120" cy="470" rx="16" ry="8" fill="var(--surface-3)"/>
+        <ellipse cx="180" cy="470" rx="16" ry="8" fill="var(--surface-3)"/>
+      </svg>
+      <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted);">Click a muscle group</div>
+    </div>
+    <div class="muscle-exercise-list" id="muscleExerciseList">
+      <div style="color:var(--text-muted);text-align:center;padding:60px 20px;">
+        <div style="font-size:40px;margin-bottom:12px;">🏋️</div>
+        <div>Select a muscle group from the body map to see all exercises that target it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NUTRITION VIEW ===== -->
+<div id="view-nutrition" class="view">
+  <h1 class="section-title">Nutrition & Fueling</h1>
+  <p class="section-sub">Macro targets synced with your training schedule</p>
+
+  <div class="nutrition-split">
+    <div class="card full">
+      <div class="card-header">
+        <span class="card-title">Weekly Training + Nutrition Schedule</span>
+      </div>
+      <div class="schedule-grid">
+        <div class="sched-day training">
+          <div class="sched-day-name">Mon</div>
+          <div class="sched-day-type">Upper (S)</div>
+          <div class="sched-day-cal">1,900</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day training">
+          <div class="sched-day-name">Tue</div>
+          <div class="sched-day-type">Lower (S)</div>
+          <div class="sched-day-cal">1,900</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day rest">
+          <div class="sched-day-name">Wed</div>
+          <div class="sched-day-type">Rest</div>
+          <div class="sched-day-cal">1,600</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day training">
+          <div class="sched-day-name">Thu</div>
+          <div class="sched-day-type">Pull (H)</div>
+          <div class="sched-day-cal">1,900</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day training">
+          <div class="sched-day-name">Fri</div>
+          <div class="sched-day-type">Push (H)</div>
+          <div class="sched-day-cal">1,900</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day training">
+          <div class="sched-day-name">Sat</div>
+          <div class="sched-day-type">Legs (H)</div>
+          <div class="sched-day-cal">1,900</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+        <div class="sched-day rest">
+          <div class="sched-day-name">Sun</div>
+          <div class="sched-day-type">Rest</div>
+          <div class="sched-day-cal">1,600</div>
+          <div style="font-size:10px;color:var(--text-muted);">kcal</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:14px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:13px;color:var(--text-dim);">
+        <strong style="color:var(--text);">Weekly total:</strong> ~12,700 kcal (5 × 1,900 training + 2 × 1,600 rest) &nbsp;•&nbsp; <strong style="color:var(--accent);">Protein:</strong> 160g minimum every day, no exceptions &nbsp;•&nbsp; <strong style="color:var(--accent-2);">Water:</strong> 3.5L training / 3.0L rest
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Macro Split — Training Day</span>
+      </div>
+      <div class="cal-display">
+        <div class="cal-value">1,900</div>
+        <div class="cal-label">kcal • 5 days/week</div>
+      </div>
+      <div class="nutrition-grid">
+        <div class="macro-card protein">
+          <div class="macro-value">160<span class="macro-unit">g</span></div>
+          <div class="macro-label">Protein (34%)</div>
+        </div>
+        <div class="macro-card carbs">
+          <div class="macro-value">190<span class="macro-unit">g</span></div>
+          <div class="macro-label">Carbs (40%)</div>
+        </div>
+        <div class="macro-card fat">
+          <div class="macro-value">55<span class="macro-unit">g</span></div>
+          <div class="macro-label">Fat (26%)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Macro Split — Rest Day</span>
+      </div>
+      <div class="cal-display">
+        <div class="cal-value" style="background:linear-gradient(135deg, var(--text-dim), var(--text-muted));-webkit-background-clip:text;">1,600</div>
+        <div class="cal-label">kcal • 2 days/week</div>
+      </div>
+      <div class="nutrition-grid">
+        <div class="macro-card protein">
+          <div class="macro-value">160<span class="macro-unit">g</span></div>
+          <div class="macro-label">Protein (same!)</div>
+        </div>
+        <div class="macro-card carbs">
+          <div class="macro-value">120<span class="macro-unit">g</span></div>
+          <div class="macro-label">Carbs (reduced)</div>
+        </div>
+        <div class="macro-card fat">
+          <div class="macro-value">50<span class="macro-unit">g</span></div>
+          <div class="macro-label">Fat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <div class="card-header">
+        <span class="card-title">Supplement Stack</span>
+      </div>
+      <div class="supps-list">
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--accent);"></div>
+          <div class="supp-name">Whey Protein</div>
+          <div class="supp-dose">25-30g</div>
+          <div class="supp-time">Post-workout</div>
+        </div>
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--accent-2);"></div>
+          <div class="supp-name">Creatine Monohydrate</div>
+          <div class="supp-dose">5g</div>
+          <div class="supp-time">Morning</div>
+        </div>
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--accent-3);"></div>
+          <div class="supp-name">Vitamin D3</div>
+          <div class="supp-dose">5,000 IU</div>
+          <div class="supp-time">With breakfast</div>
+        </div>
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--biceps);"></div>
+          <div class="supp-name">Omega-3 Fish Oil</div>
+          <div class="supp-dose">2-3g EPA/DHA</div>
+          <div class="supp-time">With meal</div>
+        </div>
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--glutes);"></div>
+          <div class="supp-name">Magnesium Glycinate</div>
+          <div class="supp-dose">300-400mg</div>
+          <div class="supp-time">Before bed</div>
+        </div>
+        <div class="supp-item">
+          <div class="supp-dot" style="background:var(--hamstrings);"></div>
+          <div class="supp-name">Caffeine (pre-workout)</div>
+          <div class="supp-dose">100-200mg</div>
+          <div class="supp-time">30min pre-train</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="exerciseModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ===== EXERCISE DATABASE =====
+const exercises = {
+  "45° Incline Barbell Press": { muscles: ["chest"], subs: ["45° Incline DB Press", "45° Incline Machine Press"], notes: "1 second pause at the bottom of each rep while maintaining tension on the pecs.", dayTypes: ["Upper Strength"], rpe: "6-8" },
+  "45° Incline DB Press": { muscles: ["chest"], subs: ["45° Incline Barbell Press", "45° Incline Machine Press"], notes: "1 second pause at the bottom of each rep while maintaining tension on the pecs.", dayTypes: ["Upper Strength"], rpe: "6-8" },
+  "Cable Crossover Ladder": { muscles: ["chest"], subs: ["Pec Deck", "Bottom-Half DB Flye"], notes: "Do one set with low cable position, one set with medium-height cable position, and one with a high cable position.", dayTypes: ["Upper Strength"], rpe: "7-8" },
+  "Pec Deck": { muscles: ["chest"], subs: ["Cable Crossover Ladder", "Bottom-Half DB Flye"], notes: "Full range of motion. Squeeze at the peak contraction.", dayTypes: ["Upper Strength"], rpe: "7-9" },
+  "Wide-Grip Pull-Up": { muscles: ["back", "biceps"], subs: ["Wide-Grip Lat Pulldown", "Dual-Handle Lat Pulldown"], notes: "1.5x shoulder width overhand grip. Slow 2-3 second negative. Feel your lats pulling apart on the way down.", dayTypes: ["Upper Strength"], rpe: "6-7" },
+  "High-Cable Lateral Raise": { muscles: ["shoulders"], subs: ["High-Cable Cuffed Lateral Raise", "Lean-In DB Lateral Raise"], notes: "Focus on squeezing your lateral delt to move the weight.", dayTypes: ["Upper Strength", "Push Hypertrophy"], rpe: "6-8" },
+  "Pendlay Deficit Row": { muscles: ["back"], subs: ["Smith Machine Row", "Single-Arm DB Row"], notes: "Stand on a bumper plate. Focus on getting a big stretch and touch your stomach/chest on each rep!", dayTypes: ["Upper Strength"], rpe: "6-7" },
+  "Smith Machine Row": { muscles: ["back"], subs: ["Pendlay Deficit Row", "Single-Arm DB Row"], notes: "Overhand grip, pull to lower chest. Control the negative.", dayTypes: ["Upper Strength"], rpe: "7-8" },
+  "Overhead Cable Triceps Extension (Bar)": { muscles: ["triceps"], subs: ["Overhead Cable Triceps Extension (Rope)", "DB Skull Crusher"], notes: "Optionally pause for 0.5-1 second in the stretched aspect of each rep.", dayTypes: ["Upper Strength", "Push Hypertrophy"], rpe: "7-9" },
+  "Bayesian Cable Curl": { muscles: ["biceps"], subs: ["Seated Super-Bayesian High Cable Curl", "Incline DB Stretch Curl"], notes: "If you have a left-right bicep size imbalance, do these 1 arm at a time, starting with the weaker arm.", dayTypes: ["Upper Strength"], rpe: "7-9" },
+  "Lying Leg Curl": { muscles: ["hamstrings"], subs: ["Seated Leg Curl", "Nordic Ham Curl"], notes: "Set the machine so that you get the biggest stretch possible at the bottom. Prevent your butt from popping up as you curl.", dayTypes: ["Lower Strength"], rpe: "7-9" },
+  "Smith Machine Squat": { muscles: ["quads", "glutes"], subs: ["DB Bulgarian Split Squat", "High-Bar Back Squat"], notes: "Set up your feet and bring them forward ~3-6 inches for a more upright squat with more quad tension.", dayTypes: ["Lower Strength"], rpe: "6-8" },
+  "Barbell RDL": { muscles: ["hamstrings", "glutes"], subs: ["DB RDL", "Snatch-Grip RDL"], notes: "Stop about 75% of the way to full lockout on each rep to keep tension on the hamstrings.", dayTypes: ["Lower Strength"], rpe: "6-7" },
+  "Leg Extension": { muscles: ["quads"], subs: ["Reverse Nordic", "Sissy Squat"], notes: "Set the seat back as far as it will go. Grab the handles hard to pull your butt into the seat. Use a 2-3 second negative.", dayTypes: ["Lower Strength"], rpe: "7-9" },
+  "Standing Calf Raise": { muscles: ["calves"], subs: ["Seated Calf Raise", "Leg Press Calf Press"], notes: "1-2 second pause at the bottom of each rep. Think about rolling your ankle on the balls of your feet.", dayTypes: ["Lower Strength", "Legs Hypertrophy"], rpe: "7-9" },
+  "Cable Crunch": { muscles: ["abs"], subs: ["Decline Weighted Crunch", "Machine Crunch"], notes: "Round your lower back as you crunch. Maintain a mind-muscle connection with your 6-pack.", dayTypes: ["Lower Strength"], rpe: "7-8" },
+  "Neutral-Grip Lat Pulldown": { muscles: ["back"], subs: ["Neutral-Grip Pull-Up", "Dual-Handle Lat Pulldown"], notes: "Do these with the handle more out in front of you, like a cross between pullover and pulldown. Focus on feeling your lats.", dayTypes: ["Pull Hypertrophy"], rpe: "6-7" },
+  "Chest-Supported Machine Row": { muscles: ["back"], subs: ["Chest-Supported T-Bar Row", "Incline Chest-Supported DB Row"], notes: "Flare elbows out at roughly 45° and squeeze your shoulder blades together hard at the top.", dayTypes: ["Pull Hypertrophy"], rpe: "6-7" },
+  "Chest-Supported T-Bar Row": { muscles: ["back"], subs: ["Chest-Supported Machine Row", "Incline Chest-Supported DB Row"], notes: "Flare elbows out and squeeze shoulder blades at the top. Control the negative.", dayTypes: ["Pull Hypertrophy"], rpe: "7-9" },
+  "1-Arm 45° Cable Rear Delt Flye": { muscles: ["shoulders"], subs: ["Rope Face Pull", "Reverse Pec Deck"], notes: "Pause for 1-2 seconds in the squeeze of each rep. Contract the rear delts hard!", dayTypes: ["Pull Hypertrophy"], rpe: "7-9" },
+  "Machine Shrug": { muscles: ["traps"], subs: ["Cable Paused Shrug-In", "DB Shrug"], notes: "Brief pause at the top and bottom of ROM. Think about pulling your shoulders up to your ears!", dayTypes: ["Pull Hypertrophy"], rpe: "6-7" },
+  "Cable Paused Shrug-In": { muscles: ["traps"], subs: ["Machine Shrug", "DB Shrug"], notes: "Pause at the top of each rep. Think about pulling your shoulders up and slightly in.", dayTypes: ["Pull Hypertrophy"], rpe: "7-8" },
+  "EZ-Bar Cable Curl": { muscles: ["biceps"], subs: ["EZ-Bar Curl", "DB Curl"], notes: "Set up the cable at the lowest position. Maintain constant tension on the biceps. Slow, controlled reps!", dayTypes: ["Pull Hypertrophy"], rpe: "7-8" },
+  "Machine Preacher Curl": { muscles: ["biceps"], subs: ["EZ-Bar Preacher Curl", "DB Preacher Curl"], notes: "Smooth, controlled reps. Mind-muscle connection with the biceps.", dayTypes: ["Pull Hypertrophy"], rpe: "7-8" },
+  "Barbell Bench Press": { muscles: ["chest", "triceps"], subs: ["Machine Chest Press", "DB Bench Press"], notes: "Set up a comfortable arch, quick pause on the chest and explode up on each rep.", dayTypes: ["Push Hypertrophy"], rpe: "6-7" },
+  "Machine Chest Press": { muscles: ["chest"], subs: ["Barbell Bench Press", "DB Bench Press"], notes: "Set up a comfortable position. Smooth, controlled reps with good mind-muscle connection.", dayTypes: ["Push Hypertrophy"], rpe: "7-8" },
+  "Machine Shoulder Press": { muscles: ["shoulders"], subs: ["Cable Shoulder Press", "Seated DB Shoulder Press"], notes: "Ensure that your elbows break at least 90°. Mind-muscle connection with your delts. Smooth, controlled reps.", dayTypes: ["Push Hypertrophy"], rpe: "6-7" },
+  "Seated DB Shoulder Press": { muscles: ["shoulders"], subs: ["Cable Shoulder Press", "Machine Shoulder Press"], notes: "Control the negative, press smoothly. Full range of motion.", dayTypes: ["Push Hypertrophy"], rpe: "7-8" },
+  "Bottom-Half DB Flye": { muscles: ["chest"], subs: ["Bottom-Half Seated Cable Flye", "Low-to-High Cable Crossover"], notes: "All reps performed in the bottom half of the ROM. Focus on feeling a deep stretch in your pecs.", dayTypes: ["Push Hypertrophy"], rpe: "7-8" },
+  "Bottom-Half Seated Cable Flye": { muscles: ["chest"], subs: ["Bottom-Half DB Flye", "Low-to-High Cable Crossover"], notes: "Bottom half ROM only. Deep stretch in the pecs at the bottom of each rep.", dayTypes: ["Push Hypertrophy"], rpe: "7-9" },
+  "Cable Triceps Kickback": { muscles: ["triceps"], subs: ["DB Triceps Kickback", "Bench Dip"], notes: "Can be done upright or bent over. When in full squeeze, your shoulder should be positioned back behind your torso.", dayTypes: ["Push Hypertrophy"], rpe: "7-8" },
+  "Lying Leg Raise": { muscles: ["abs"], subs: ["Hanging Leg Raise", "Modified Candlestick"], notes: "Perform these slowly, focus on keeping your lower back against the ground throughout the set.", dayTypes: ["Push Hypertrophy"], rpe: "7-8" },
+  "Leg Press": { muscles: ["quads", "glutes"], subs: ["Smith Machine Static Lunge", "DB Walking Lunge"], notes: "Feet lower on the platform for more quad focus. Get as deep as you can without excessive back rounding.", dayTypes: ["Legs Hypertrophy"], rpe: "6-7" },
+  "Seated Leg Curl": { muscles: ["hamstrings"], subs: ["Lying Leg Curl", "Nordic Ham Curl"], notes: "Lean forward over the machine to get a maximum stretch in your hamstrings.", dayTypes: ["Legs Hypertrophy"], rpe: "7-9" },
+  "Walking Lunge": { muscles: ["quads", "glutes"], subs: ["DB Step-Up", "Goblet Squat"], notes: "Take medium strides. Minimize contribution from the back leg.", dayTypes: ["Legs Hypertrophy"], rpe: "6-7" },
+  "Machine Hip Abduction": { muscles: ["glutes"], subs: ["Cable Hip Abduction", "Lateral Band Walk"], notes: "If possible, use pads to increase ROM. Lean forward and grab the machine rails to stretch the glutes further.", dayTypes: ["Legs Hypertrophy"], rpe: "7-9" },
+  "Hack Squat": { muscles: ["quads"], subs: ["Leg Press", "DB Walking Lunge"], notes: "Feet lower on platform for quad focus. Full depth with control.", dayTypes: ["Legs Hypertrophy"], rpe: "7-9" },
+  "Lean-Back Lat Pulldown": { muscles: ["back"], subs: ["Lean-Back Machine Pulldown", "Pull-Up"], notes: "Initiate the pulldown with straight posture. Lean back 15-30° to get mid-back more involved. Touch bar to chest.", dayTypes: ["Pull Hypertrophy"], rpe: "7-8" },
+  "Dual-Handle Lat Pulldown": { muscles: ["back"], subs: ["Wide-Grip Lat Pulldown", "Wide-Grip Pull-Up"], notes: "Neutral or semi-pronated grip. Focus on pulling through the elbows.", dayTypes: ["Upper Strength"], rpe: "7-8" },
+  "DB Concentration Curl": { muscles: ["biceps"], subs: ["Concentration Cable Curl", "DB Preacher Curl"], notes: "Brace elbow against inner thigh. Slow, controlled reps with peak contraction squeeze.", dayTypes: ["Pull Hypertrophy"], rpe: "8-9" },
+  "Cable Rope Hammer Curl": { muscles: ["biceps"], subs: ["DB Hammer Curl", "Hammer Preacher Curl"], notes: "Neutral grip, slow negative. Focus on the brachialis and brachioradialis.", dayTypes: ["Pull Hypertrophy"], rpe: "7-9" },
+  "Leg Press Calf Press": { muscles: ["calves"], subs: ["Seated Calf Raise", "Standing Calf Raise"], notes: "Full range of motion. Pause at the stretch. Control the movement.", dayTypes: ["Lower Strength"], rpe: "7-9" },
+  "EZ-Bar Skull Crusher": { muscles: ["triceps"], subs: ["DB Skull Crusher", "Katana Triceps Extension"], notes: "Lower to forehead or just behind it. Control the negative, explode up.", dayTypes: ["Push Hypertrophy"], rpe: "7-9" },
+  "Triceps Pressdown (Bar)": { muscles: ["triceps"], subs: ["Triceps Pressdown (Rope)", "DB Triceps Kickback"], notes: "Keep elbows pinned at your sides. Full lockout at the bottom, controlled negative.", dayTypes: ["Push Hypertrophy"], rpe: "7-9" },
+  "Ab Wheel Rollout": { muscles: ["abs"], subs: ["Swiss Ball Rollout", "Long-Lever Plank"], notes: "Go as far as you can while maintaining a neutral spine. Control the entire movement.", dayTypes: ["Push Hypertrophy"], rpe: "7-9" },
+  "Machine Crunch": { muscles: ["abs"], subs: ["Decline Weighted Crunch", "Cable Crunch"], notes: "Round your lower back as you crunch. Focus on the contraction.", dayTypes: ["Lower Strength"], rpe: "7-9" },
+  "45° Hyperextension": { muscles: ["hamstrings", "glutes"], subs: ["Glute-Ham Raise", "Cable Pull-Through"], notes: "Round over at the top, extend through the hips. Control the negative.", dayTypes: ["Lower Strength"], rpe: "7-8" },
+  "Smith Machine Static Lunge w/ Elevated Front Foot": { muscles: ["quads", "glutes"], subs: ["DB Bulgarian Split Squat", "High-Bar Back Squat"], notes: "Elevate front foot on a small platform for greater ROM. Keep torso upright.", dayTypes: ["Lower Strength"], rpe: "7-8" }
+};
+
+// ===== WEEK 1 WORKOUTS (template — all foundation weeks are similar) =====
+const weekProgram = {
+  1: {
+    block: "Foundation",
+    days: [
+      { num: 1, name: "Upper", focus: "Strength", exercises: [
+        { name: "45° Incline Barbell Press", warmup: "2-3", sets: 1, reps: "6-8", rpe: "~6", rest: "3-5 min" },
+        { name: "Cable Crossover Ladder", warmup: "1-2", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" },
+        { name: "Wide-Grip Pull-Up", warmup: "1-2", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "High-Cable Lateral Raise", warmup: "1-2", sets: 1, reps: "8-10", rpe: "~6", rest: "1-2 min" },
+        { name: "Pendlay Deficit Row", warmup: "1-2", sets: 1, reps: "6-8", rpe: "~6", rest: "2-3 min" },
+        { name: "Overhead Cable Triceps Extension (Bar)", warmup: "1", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" },
+        { name: "Bayesian Cable Curl", warmup: "1", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" }
+      ]},
+      { num: 2, name: "Lower", focus: "Strength", exercises: [
+        { name: "Lying Leg Curl", warmup: "2", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" },
+        { name: "Smith Machine Squat", warmup: "2-4", sets: 1, reps: "6-8", rpe: "~6", rest: "3-5 min" },
+        { name: "Barbell RDL", warmup: "2-4", sets: 1, reps: "6-8", rpe: "~6", rest: "2-3 min" },
+        { name: "Leg Extension", warmup: "1-2", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" },
+        { name: "Standing Calf Raise", warmup: "1-2", sets: 1, reps: "6-8", rpe: "~7", rest: "1-2 min" },
+        { name: "Cable Crunch", warmup: "1", sets: 1, reps: "8-10", rpe: "~7", rest: "1-2 min" }
+      ]},
+      { num: 3, name: "Rest", focus: "" },
+      { num: 4, name: "Pull", focus: "Hypertrophy", exercises: [
+        { name: "Neutral-Grip Lat Pulldown", warmup: "2-3", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "Chest-Supported Machine Row", warmup: "2-3", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "1-Arm 45° Cable Rear Delt Flye", warmup: "1-2", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Machine Shrug", warmup: "2-3", sets: 1, reps: "10-12", rpe: "~6", rest: "1-2 min" },
+        { name: "EZ-Bar Cable Curl", warmup: "1", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Machine Preacher Curl", warmup: "1", sets: 1, reps: "12-15", rpe: "~7", rest: "1-2 min" }
+      ]},
+      { num: 5, name: "Push", focus: "Hypertrophy", exercises: [
+        { name: "Barbell Bench Press", warmup: "2-4", sets: 1, reps: "8-10", rpe: "~6", rest: "3-5 min" },
+        { name: "Machine Shoulder Press", warmup: "2-3", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "Bottom-Half DB Flye", warmup: "1-2", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "High-Cable Lateral Raise", warmup: "1", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Overhead Cable Triceps Extension (Bar)", warmup: "1", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Cable Triceps Kickback", warmup: "1", sets: 1, reps: "12-15", rpe: "~7", rest: "1-2 min" },
+        { name: "Lying Leg Raise", warmup: "1-2", sets: 1, reps: "10-20", rpe: "~7", rest: "1-2 min" }
+      ]},
+      { num: 6, name: "Legs", focus: "Hypertrophy", exercises: [
+        { name: "Leg Press", warmup: "2-4", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "Seated Leg Curl", warmup: "1-2", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Walking Lunge", warmup: "2-3", sets: 1, reps: "8-10", rpe: "~6", rest: "2-3 min" },
+        { name: "Machine Hip Abduction", warmup: "1-2", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" },
+        { name: "Standing Calf Raise", warmup: "1-2", sets: 1, reps: "10-12", rpe: "~7", rest: "1-2 min" }
+      ]},
+      { num: 7, name: "Rest", focus: "" }
+    ]
+  }
+};
+
+// Generate weeks 2-12 descriptions
+const weekMeta = {};
+for (let w = 1; w <= 5; w++) weekMeta[w] = { block: "Foundation", note: w <= 2 ? "Volume may feel low — focus on technique!" : "Building movement quality and RPE calibration" };
+for (let w = 6; w <= 12; w++) weekMeta[w] = { block: "Ramping", note: "Progressive volume increase. Intensity techniques introduced." };
+
+const muscleColors = {
+  chest: "var(--chest)", back: "var(--back)", shoulders: "var(--shoulders)", biceps: "var(--biceps)",
+  triceps: "var(--triceps)", quads: "var(--quads)", hamstrings: "var(--hamstrings)", glutes: "var(--glutes)",
+  calves: "var(--calves)", abs: "var(--abs)", traps: "var(--traps)"
+};
+
+// ===== VIEW SWITCHING =====
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name.substring(0, 4)) ||
+        (name === 'database' && b.textContent === 'DB') ||
+        (name === 'database' && b.textContent === 'Exercise DB') ||
+        (name === 'bodymap' && (b.textContent === 'Body' || b.textContent === 'Body Map')) ||
+        (name === 'dashboard' && (b.textContent === 'Dash' || b.textContent === 'Dashboard')) ||
+        (name === 'workout' && (b.textContent === 'Train' || b.textContent === 'Workouts')) ||
+        (name === 'nutrition' && (b.textContent === 'Fuel' || b.textContent === 'Nutrition')))
+      b.classList.add('active');
+  });
+}
+
+// ===== WEEK SELECTOR =====
+function buildWeekSelectors() {
+  ['weekSelector', 'workoutWeekSelector'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    for (let w = 1; w <= 12; w++) {
+      const btn = document.createElement('button');
+      btn.className = 'week-btn ' + (w <= 5 ? 'foundation' : 'ramping') + (w === 1 ? ' active' : '');
+      btn.textContent = 'W' + w;
+      btn.onclick = () => selectWeek(w);
+      el.appendChild(btn);
+    }
+  });
+}
+
+function selectWeek(w) {
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.week-btn').forEach(b => {
+    if (b.textContent === 'W' + w) b.classList.add('active');
+  });
+  document.getElementById('selectedWeekNum').textContent = w;
+  const meta = weekMeta[w];
+  document.getElementById('blockBadge').textContent = meta.block + ' Block';
+  document.getElementById('blockBadge').style.background = meta.block === 'Foundation' ? 'rgba(255,107,53,0.15)' : 'rgba(0,212,170,0.15)';
+  document.getElementById('blockBadge').style.color = meta.block === 'Foundation' ? 'var(--strength)' : 'var(--hypertrophy)';
+  renderWeekOverview(w);
+  renderWorkoutView(w);
+}
+
+function renderWeekOverview(w) {
+  const el = document.getElementById('weekOverview');
+  const program = weekProgram[1]; // We use week 1 as template
+  const days = program.days;
+  let html = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;">';
+  days.forEach(d => {
+    const isRest = d.name === 'Rest';
+    const isStr = d.focus === 'Strength';
+    html += `<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;${!isRest ? 'border-top:3px solid ' + (isStr ? 'var(--strength)' : 'var(--hypertrophy)') : 'border-top:3px solid var(--border)'}">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);">Day ${d.num}</div>
+      <div style="font-weight:700;font-size:14px;margin:4px 0;">${d.name}</div>
+      <div style="font-size:11px;color:${isStr ? 'var(--strength)' : isRest ? 'var(--text-muted)' : 'var(--hypertrophy)'};font-family:var(--mono);">${d.focus || '—'}</div>
+      <div style="font-family:var(--mono);font-size:18px;font-weight:700;margin-top:8px;color:var(--text-dim);">${d.exercises ? d.exercises.length : '—'}</div>
+      <div style="font-size:10px;color:var(--text-muted);">${d.exercises ? 'exercises' : ''}</div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// ===== WORKOUT VIEW =====
+function renderWorkoutView(w) {
+  const el = document.getElementById('workoutContent');
+  const program = weekProgram[1];
+  let html = '';
+
+  program.days.forEach(day => {
+    if (day.name === 'Rest') {
+      html += `<div class="workout-day"><div class="rest-day-card"><div class="icon">😴</div><div style="font-size:16px;font-weight:600;color:var(--text-dim);">Day ${day.num} — Rest</div><div style="margin-top:8px;font-size:13px;">Recovery, stretching, light cardio optional. Stay hydrated (3L+).</div></div></div>`;
+      return;
+    }
+
+    const isStr = day.focus === 'Strength';
+    html += `<div class="workout-day">
+      <div class="day-header">
+        <div class="day-num ${isStr ? 'strength' : 'hypertrophy'}">${day.num}</div>
+        <div>
+          <div class="day-title">${day.name}</div>
+          <div class="day-focus">${day.focus} Focus${w <= 5 ? ' • Foundation Block' : ' • Ramping Block'}</div>
+        </div>
+      </div>
+      <table class="exercise-table">
+        <thead><tr>
+          <th style="width:30%">Exercise</th>
+          <th>Warmup</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>RPE</th>
+          <th>Rest</th>
+          <th>Video</th>
+        </tr></thead>
+        <tbody>`;
+
+    day.exercises.forEach(ex => {
+      const data = exercises[ex.name];
+      const muscles = data ? data.muscles : [];
+      const primaryColor = muscles.length ? muscleColors[muscles[0]] : 'var(--text-muted)';
+      const ytQuery = encodeURIComponent('jeff nippard ' + ex.name + ' form');
+
+      html += `<tr class="exercise-row" onclick="openExerciseModal('${ex.name.replace(/'/g, "\\'")}')">
+        <td><div class="ex-name"><span class="muscle-dot" style="background:${primaryColor}"></span>${ex.name}</div></td>
+        <td class="ex-detail">${ex.warmup}</td>
+        <td class="ex-detail">${ex.sets}</td>
+        <td class="ex-detail">${ex.reps}</td>
+        <td class="ex-rpe" style="color:${parseFloat(ex.rpe) >= 8 ? 'var(--accent)' : 'var(--text-dim)'}">${ex.rpe}</td>
+        <td class="ex-detail">${ex.rest}</td>
+        <td><a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="video-link" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1 1.8 2 2.1 1.9.6 9.5.6 9.5.6s7.6 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>Watch</a></td>
+      </tr>`;
+    });
+
+    html += '</tbody></table></div>';
+  });
+
+  el.innerHTML = html;
+}
+
+// ===== EXERCISE DATABASE =====
+let activeFilters = new Set();
+
+function buildExerciseDB() {
+  // Build muscle filter buttons
+  const muscles = [...new Set(Object.values(exercises).flatMap(e => e.muscles))].sort();
+  const filterEl = document.getElementById('muscleFilters');
+  filterEl.innerHTML = '<button class="filter-btn active" onclick="clearFilters()">All</button>';
+  muscles.forEach(m => {
+    filterEl.innerHTML += `<button class="filter-btn" data-muscle="${m}" onclick="toggleFilter('${m}')" style="border-left:3px solid ${muscleColors[m]}">${m}</button>`;
+  });
+  renderExerciseGrid();
+}
+
+function toggleFilter(muscle) {
+  if (activeFilters.has(muscle)) activeFilters.delete(muscle);
+  else activeFilters.add(muscle);
+  document.querySelectorAll('#muscleFilters .filter-btn').forEach(b => {
+    if (b.dataset.muscle) b.classList.toggle('active', activeFilters.has(b.dataset.muscle));
+    else b.classList.toggle('active', activeFilters.size === 0);
+  });
+  renderExerciseGrid();
+}
+
+function clearFilters() {
+  activeFilters.clear();
+  document.querySelectorAll('#muscleFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', !b.dataset.muscle);
+  });
+  document.getElementById('exerciseSearch').value = '';
+  renderExerciseGrid();
+}
+
+function filterExercises() { renderExerciseGrid(); }
+
+function renderExerciseGrid() {
+  const search = document.getElementById('exerciseSearch').value.toLowerCase();
+  const grid = document.getElementById('exerciseGrid');
+  let html = '';
+
+  Object.entries(exercises)
+    .filter(([name, data]) => {
+      if (search && !name.toLowerCase().includes(search)) return false;
+      if (activeFilters.size && !data.muscles.some(m => activeFilters.has(m))) return false;
+      return true;
+    })
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .forEach(([name, data]) => {
+      const muscleTags = data.muscles.map(m => `<span class="muscle-tag" style="background:${muscleColors[m]}22;color:${muscleColors[m]}">${m}</span>`).join('');
+      const dayTags = data.dayTypes.map(d => d.includes('Strength') ? 'S' : 'H').join('/');
+      const ytQuery = encodeURIComponent('jeff nippard ' + name + ' form');
+
+      html += `<div class="db-card" onclick="openExerciseModal('${name.replace(/'/g, "\\'")}')">
+        <div class="db-card-top">
+          <div class="db-card-name">${name}</div>
+          <a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="video-link" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1.8 2 2.1 1.9.6 9.5.6 9.5.6s7.6 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a>
+        </div>
+        <div class="db-card-muscles">${muscleTags}</div>
+        <div class="db-card-meta">
+          <span>${dayTags}</span>
+          <span>RPE ${data.rpe}</span>
+          <span>${data.subs.length} subs</span>
+        </div>
+      </div>`;
+    });
+
+  grid.innerHTML = html || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">No exercises found</div>';
+}
+
+// ===== EXERCISE MODAL =====
+function openExerciseModal(name) {
+  const data = exercises[name];
+  if (!data) return;
+
+  const muscleTags = data.muscles.map(m => `<span class="muscle-tag" style="background:${muscleColors[m]}22;color:${muscleColors[m]}">${m}</span>`).join('');
+  const ytQuery = encodeURIComponent('jeff nippard ' + name + ' form tutorial');
+
+  let html = `
+    <div class="modal-title">${name}</div>
+    <div class="modal-muscles">${muscleTags}</div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Coaching Notes</div>
+      <div class="modal-note">${data.notes || 'No specific notes for this exercise.'}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Target RPE</div>
+      <div class="modal-sets-detail">RPE ${data.rpe} &nbsp;•&nbsp; ${data.dayTypes.join(', ')}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Substitution Options</div>
+      <div class="modal-subs">
+        ${data.subs.map((s, i) => `<div class="sub-item"><span class="sub-num">${i + 1}</span><span>${s}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Form Video</div>
+      <a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="modal-video-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1.8 2 2.1 1.9.6 9.5.6 9.5.6s7.6 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+        Watch Jeff Nippard — ${name}
+      </a>
+    </div>`;
+
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('exerciseModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('exerciseModal').classList.remove('active');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ===== BODY MAP =====
+let selectedMuscle = null;
+
+function selectMuscle(muscle) {
+  selectedMuscle = selectedMuscle === muscle ? null : muscle;
+  document.querySelectorAll('.muscle-region').forEach(r => {
+    r.classList.toggle('active', r.dataset.muscle === selectedMuscle);
+  });
+  renderMuscleExercises();
+}
+
+function renderMuscleExercises() {
+  const el = document.getElementById('muscleExerciseList');
+  if (!selectedMuscle) {
+    el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:60px 20px;"><div style="font-size:40px;margin-bottom:12px;">🏋️</div><div>Select a muscle group from the body map.</div></div>';
+    return;
+  }
+
+  const matched = Object.entries(exercises).filter(([_, d]) => d.muscles.includes(selectedMuscle));
+  let html = `<div class="muscle-section">
+    <div class="muscle-section-header">
+      <div class="muscle-color-bar" style="background:${muscleColors[selectedMuscle]}"></div>
+      <div class="muscle-section-title">${selectedMuscle}</div>
+      <div class="muscle-count">${matched.length} exercises</div>
+    </div>`;
+
+  matched.sort((a, b) => a[0].localeCompare(b[0])).forEach(([name, data]) => {
+    const ytQuery = encodeURIComponent('jeff nippard ' + name + ' form');
+    html += `<div class="db-card" style="margin-bottom:8px;" onclick="openExerciseModal('${name.replace(/'/g, "\\'")}')">
+      <div class="db-card-top">
+        <div class="db-card-name">${name}</div>
+        <a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="video-link" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1.8 2 2.1 1.9.6 9.5.6 9.5.6s7.6 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a>
+      </div>
+      <div class="db-card-muscles">${data.muscles.map(m => `<span class="muscle-tag" style="background:${muscleColors[m]}22;color:${muscleColors[m]}">${m}</span>`).join('')}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-top:8px;">${data.notes.substring(0, 100)}${data.notes.length > 100 ? '...' : ''}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// ===== INIT =====
+buildWeekSelectors();
+selectWeek(1);
+buildExerciseDB();
+</script>
+
+</body>
+</html>

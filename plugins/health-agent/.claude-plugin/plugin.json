@@ -1,0 +1,8 @@
+{
+  "name": "health-agent",
+  "version": "2.0.0",
+  "description": "Scheduled health accountability agent. Daily iMessage check-ins covering nutrition, training, and medication/supplement tracking. Multi-domain macro tracking, workout logging, medication compliance, avoidance detection, and self-improving persona with adaptive personality weights.",
+  "author": {
+    "name": "Amir"
+  }
+}
